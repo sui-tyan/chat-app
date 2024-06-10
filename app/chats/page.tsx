@@ -43,6 +43,7 @@ import IncomingChatBubble from '@/components/chatBubble/IncomingChatBubble';
 import { useState } from 'react';
 import { MessageData } from '@/types/Chat';
 import ChatRenderer from '@/components/chatBubble/ChatRenderer';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function Chats() {
   const [chatHistory, setChatHistory] = useState<MessageData[]>([
@@ -198,11 +199,8 @@ export default function Chats() {
           Share
         </Button>
       </header>
-      <main className="grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3">
-        <div
-          className="relative hidden flex-col items-start gap-8 md:flex"
-          x-chunk="dashboard-03-chunk-0"
-        >
+      <main className="grid flex-1 gap-4 h-screen overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="relative hidden flex-col items-start gap-8 md:flex">
           <CardContent className="grid gap-2 w-full px-0">
             <div className="flex items-center gap-4">
               <div className="grid gap-1">
@@ -226,14 +224,8 @@ export default function Chats() {
             <Separator />
           </CardContent>
         </div>
-        <div className="relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2">
-          <Badge
-            variant="outline"
-            className="absolute right-3 top-3 cursor-pointer"
-          >
-            <Video />
-          </Badge>
-          <div className="flex-1">
+        <div className="flex flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 overflow-auto ">
+          <div className="grow overflow-y-auto h-[50vh]">
             {chatHistory.map(({ message, messageType }, index) => (
               <ChatRenderer
                 key={index}
@@ -242,10 +234,7 @@ export default function Chats() {
               />
             ))}
           </div>
-          <div
-            className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"
-            x-chunk="dashboard-03-chunk-1"
-          >
+          <div className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring mt-4">
             <Label htmlFor="message" className="sr-only">
               Message
             </Label>
