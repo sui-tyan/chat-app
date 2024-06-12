@@ -7,7 +7,6 @@ import {
   Rabbit,
   Settings,
   Share,
-  Video,
   Turtle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -29,21 +28,19 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import OutgoingChatBubble from '@/components/chatBubble/OutgoingChatBubble';
-import IncomingChatBubble from '@/components/chatBubble/IncomingChatBubble';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MessageData } from '@/types/Chat';
 import ChatRenderer from '@/components/chatBubble/ChatRenderer';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { socket } from '@/lib/socket';
+import { api } from '@/lib/api';
 
 export default function Chats() {
   const [chatHistory, setChatHistory] = useState<MessageData[]>([
@@ -55,6 +52,8 @@ export default function Chats() {
   ]);
 
   const [message, setMessage] = useState<string>('');
+  const [chatId, setChatId] = useState<string>('');
+  const [user, setUser] = useState<string>('');
 
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
@@ -66,12 +65,43 @@ export default function Chats() {
 
     if (message === '') return null;
 
+    socket.emit('send-message', { message: message, socketId: chatId });
+
     setChatHistory((prev) => [
       ...prev,
       { message: e.target.value, messageType: 'outgoing' },
     ]);
     setMessage('');
   };
+
+  useEffect(() => {
+    socket.emit('user-connected', user);
+    async function callConvo() {
+      setTimeout(async () => {
+        console.log(await api.get('/all-convo'));
+      }, Number(1000));
+    }
+    callConvo();
+
+    return () => {
+      socket.off('user-connected');
+    };
+  }, [user]);
+
+  useEffect(() => {
+    socket.on('receive-message', (response) => {
+      console.log(response);
+      setChatHistory((prev) => [
+        ...prev,
+        { message: response, messageType: 'incoming' },
+      ]);
+    });
+
+    return () => {
+      socket.off('receive-message');
+    };
+  }, []);
+
   return (
     <div className="flex flex-col">
       <header className="sticky top-0 z-10 flex h-[53px] items-center gap-1 border-b bg-background px-4">
@@ -201,6 +231,18 @@ export default function Chats() {
       </header>
       <main className="grid flex-1 gap-4 h-screen overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3">
         <div className="relative hidden flex-col items-start gap-8 md:flex">
+          <Input
+            placeholder="name"
+            onKeyDown={(e) => {
+              e.code === 'Enter' && e.shiftKey == false
+                ? setUser(e.target.value)
+                : null;
+            }}
+          />
+          <Input
+            placeholder="chat id"
+            onChange={(e) => setChatId(e.target.value)}
+          />
           <CardContent className="grid gap-2 w-full px-0">
             <div className="flex items-center gap-4">
               <div className="grid gap-1">
