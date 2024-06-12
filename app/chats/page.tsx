@@ -236,8 +236,8 @@ export default function Chats() {
         </Button>
       </header>
       <main className="grid flex-1 gap-4 h-screen overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3">
-        <div className="relative hidden flex-col items-start gap-8 md:flex">
-          <Input
+        <div className="hidden flex-col items-start gap-8 md:flex overflow-auto">
+          {/* <Input
             placeholder="name"
             onKeyDown={(e) => {
               e.code === 'Enter' && e.shiftKey == false
@@ -248,29 +248,40 @@ export default function Chats() {
           <Input
             placeholder="chat id"
             onChange={(e) => setChatId(e.target.value)}
-          />
-          <CardContent className="grid gap-2 w-full px-0">
-            <div className="flex items-center gap-4">
-              <div className="grid gap-1">
-                <p className="text-sm font-medium leading-none">John Smith</p>
-                <p className="text-sm text-muted-foreground text-ellipsis overflow-hidden">
-                  You: 178.12.525.74
-                </p>
+          /> */}
+          <div className="grow w-full overflow-y-auto h-[50vh] flex flex-col">
+            <CardContent className="grid gap-2 w-full px-0">
+              <div className="flex items-center gap-4">
+                <div className="grid gap-1">
+                  <p className="text-sm font-medium leading-none">John Smith</p>
+                  <p className="text-sm text-muted-foreground text-ellipsis overflow-hidden">
+                    You: 178.12.525.74
+                  </p>
+                </div>
               </div>
-            </div>
-            <Separator />
-            <div className="flex items-center gap-4">
-              <div className="grid gap-1">
-                <p className="text-sm font-medium leading-none">
-                  Raiden Bosenmori Mei
-                </p>
-                <p className="text-sm text-muted-foreground text-ellipsis overflow-hidden">
-                  I weep for the departed
-                </p>
+              <Separator />
+              <div className="flex items-center gap-4">
+                <div className="grid gap-1">
+                  <p className="text-sm font-medium leading-none">John Smith</p>
+                  <p className="text-sm text-muted-foreground text-ellipsis overflow-hidden">
+                    You: 178.12.525.74
+                  </p>
+                </div>
               </div>
-            </div>
-            <Separator />
-          </CardContent>
+              <Separator />
+              <div className="flex items-center gap-4">
+                <div className="grid gap-1">
+                  <p className="text-sm font-medium leading-none">
+                    Raiden Bosenmori Mei
+                  </p>
+                  <p className="text-sm text-muted-foreground text-ellipsis overflow-hidden">
+                    I weep for the departed
+                  </p>
+                </div>
+              </div>
+              <Separator />
+            </CardContent>
+          </div>
         </div>
         <div className="flex flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 overflow-auto ">
           <div className="grow overflow-y-auto h-[50vh] flex flex-col">
