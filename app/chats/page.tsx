@@ -63,6 +63,8 @@ export default function Chats() {
   const onEnterPress = (e) => {
     e.preventDefault();
 
+    console.log('sending');
+
     if (message === '') return null;
 
     socket.emit('send-message', { message: message, socketId: chatId });
@@ -101,6 +103,10 @@ export default function Chats() {
       socket.off('receive-message');
     };
   }, []);
+
+  useEffect(() => {
+    console.log(chatHistory);
+  }, [chatHistory]);
 
   return (
     <div className="flex flex-col">
@@ -267,12 +273,12 @@ export default function Chats() {
           </CardContent>
         </div>
         <div className="flex flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 overflow-auto ">
-          <div className="grow overflow-y-auto h-[50vh]">
-            {chatHistory.map(({ message, messageType }, index) => (
+          <div className="grow overflow-y-auto h-[50vh] flex flex-col">
+            {chatHistory.map((chat, index) => (
               <ChatRenderer
                 key={index}
-                message={message}
-                messageType={messageType}
+                message={chat.message}
+                messageType={chat.messageType}
               />
             ))}
           </div>
